@@ -10,7 +10,3 @@ The StockApi modile provides a REST API for simple product stock updates.
 ```
 composer require spryker/stock-api
 ```
-
-## Documentation
-
-[Module Documentation](https://academy.spryker.com/developing_with_spryker/module_guide/zed_api/zed_api.html?Highlight=api)
