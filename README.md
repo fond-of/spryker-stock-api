@@ -1,13 +1,13 @@
-# ProductApi Module
-[![Build Status](https://travis-ci.org/spryker/ProductApi.svg)](https://travis-ci.org/spryker/ProductApi)
-[![Coverage Status](https://coveralls.io/repos/github/spryker/ProductApi/badge.svg)](https://coveralls.io/github/spryker/ProductApi)
-
-ProductApi provides REST API connection towards product functionality. Our API modules expose CRUD facade methods (find, get, add, update, remove) that can be mapped to a URL via REST resource/action resolution.
+# Stock API Module
+[![Build Status](https://travis-ci.org/fond-of/spryker-stock-api.svg?branch=master)](https://travis-ci.org/fond-of/spryker-stock-api)
+[![PHP from Travis config](https://img.shields.io/travis/php-v/symfony/symfony.svg)](https://php.net/)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://packagist.org/packages/fond-of-spryker/stock-api)
+StockApi provides REST API for simple product stock updates.
 
 ## Installation
 
 ```
-composer require spryker/customer-api
+composer require spryker/stock-api
 ```
 
 ## Documentation
