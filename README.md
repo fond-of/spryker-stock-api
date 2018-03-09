@@ -24,9 +24,9 @@ curl -X PATCH "http://zed.yourdomain.com/api/rest/stocks/{sku}" \
      -H 'Content-Type: application/json' \
      -d $'{
           "data": {
-            "is_never_out_of_stock": true,
-            "quantity": 0,
-            "stock_type": "Warehouse1"
+            "quantity": 10,
+            "stock_type": "Warehouse1",
+            "is_never_out_of_stock": true            
           }
      }'
 ```
