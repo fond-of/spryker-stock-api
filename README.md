@@ -10,3 +10,23 @@ The StockApi modile provides a REST API for simple product stock updates.
 ```
 composer require spryker/stock-api
 ```
+
+## API
+
+Update stock of a concrete product.
+
+##### PATCH /api/rest/stocks/{sku}
+
+##### Example
+
+```sh
+curl -X PATCH "http://zed.yourdomain.com/api/rest/stocks/{sku}" \
+     -H 'Content-Type: application/json' \
+     -d $'{
+          "data": {
+            "is_never_out_of_stock": true,
+            "quantity": 0,
+            "stock_type": "Warehouse1"
+          }
+     }'
+```
