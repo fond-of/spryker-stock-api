@@ -33,7 +33,7 @@ interface StockApiToAvailabilityInterface
     public function createStockProduct(StockProductTransfer $transferStockProduct);
 
     /**
-     * @param \Generated\Shared\Transfer\StockProductTransfer $stockProductTransfer
+     * @param \Generated\Shared\Transfer\w $stockProductTransfer
      *
      * @return int
      */
