@@ -22,10 +22,9 @@ use Spryker\Zed\Availability\Persistence\AvailabilityQueryContainerInterface;
 class StockApi implements StockApiInterface
 {
     /**
-     * @var StockApiToApiInterface
+     * @var \FondOfSpryker\Zed\StockApi\Dependency\QueryContainer\StockApiToApiInterface
      */
     protected $apiQueryContainer;
-
 
     /**
      * @var \FondOfSpryker\Zed\StockApi\Business\Mapper\TransferMapperInterface
@@ -47,9 +46,8 @@ class StockApi implements StockApiInterface
      */
     protected $availabilityQueryContainer;
 
-
     /**
-     * @param StockApiToApiInterface $apiQueryContainer
+     * @param \FondOfSpryker\Zed\StockApi\Dependency\QueryContainer\StockApiToApiInterface $apiQueryContainer
      * @param \FondOfSpryker\Zed\StockApi\Business\Mapper\EntityMapperInterface $entityMapper
      * @param \FondOfSpryker\Zed\StockApi\Business\Mapper\TransferMapperInterface $transferMapper
      * @param \FondOfSpryker\Zed\StockApi\Dependency\Facade\StockApiToAvailabilityInterface $stockFacade
@@ -61,8 +59,7 @@ class StockApi implements StockApiInterface
         TransferMapperInterface $transferMapper,
         StockApiToAvailabilityInterface $stockFacade,
         AvailabilityQueryContainerInterface $availabilityQueryContainer
-    )
-    {
+    ) {
         $this->apiQueryContainer = $apiQueryContainer;
         $this->entityMapper = $entityMapper;
         $this->transferMapper = $transferMapper;
@@ -74,21 +71,20 @@ class StockApi implements StockApiInterface
      * @param int $sku
      * @param \Generated\Shared\Transfer\ApiDataTransfer $apiDataTransfer
      *
-     * @return \Generated\Shared\Transfer\ApiItemTransfer
+     * @throws \Spryker\Zed\Api\Business\Exception\EntityNotFoundException
      *
-     * @throws EntityNotFoundException
+     * @return \Generated\Shared\Transfer\ApiItemTransfer
      */
     public function update($sku, ApiDataTransfer $apiDataTransfer)
     {
-        $availability = $this->availabilityQueryContainer->querySpyAvailabilityBySku($sku)->findOneOrCreate();
+        $availability = $this->getAvailability($sku);
 
         if (!$availability) {
             throw new EntityNotFoundException(sprintf('Availability not found for sku %s', $sku));
         }
 
         $stockProductTransfer = $this->createStockProductTransfer($sku, $apiDataTransfer, $availability);
-
-        $this->stockFacade->updateStockProduct($stockProductTransfer);
+        $stockProductTransfer = $this->stockFacade->updateStockProduct($stockProductTransfer);
 
         return $this->apiQueryContainer->createApiItem($stockProductTransfer, $sku);
     }
@@ -100,7 +96,7 @@ class StockApi implements StockApiInterface
      *
      * @return \Generated\Shared\Transfer\StockProductTransfer
      */
-    private function createStockProductTransfer(string $sku, ApiDataTransfer $apiDataTransfer, SpyAvailability $availability): StockProductTransfer
+    private function createStockProductTransfer(string $sku, ApiDataTransfer $apiDataTransfer, SpyAvailability $availability)
     {
         $data = (array)$apiDataTransfer->getData();
 
@@ -112,4 +108,16 @@ class StockApi implements StockApiInterface
         return $stockProductTransfer;
     }
 
+    /**
+     * @param string $sku
+     *
+     * @return mixed
+     */
+    public function getAvailability(string $sku)
+    {
+        $spyAvailabilityQuery = $this->availabilityQueryContainer->querySpyAvailabilityBySku($sku);
+        $availability = $spyAvailabilityQuery->findOneOrCreate();
+
+        return $availability;
+    }
 }
