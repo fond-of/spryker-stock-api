@@ -8,7 +8,7 @@ The StockApi module provides a REST API for simple product stock updates.
 ## Installation
 
 ```
-composer require spryker/stock-api
+composer require fond-of-spryker/stock-api
 ```
 
 ## API
