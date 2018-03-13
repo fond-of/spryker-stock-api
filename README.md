@@ -13,7 +13,7 @@ composer require fond-of-spryker/stock-api
 
 ## API
 
-Update stock of a concrete product.
+Update stock of a concrete product. `quantity` and `stock_type` are mandatory fields.
 
 ##### PATCH /api/rest/stocks/{sku}
 
