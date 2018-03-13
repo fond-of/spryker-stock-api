@@ -14,7 +14,7 @@ class TransferMapper implements TransferMapperInterface
     /**
      * @param array $data
      *
-     * @return StockProductTransfer
+     * @return \Generated\Shared\Transfer\StockProductTransfer
      */
     public function toTransfer(array $data)
     {
