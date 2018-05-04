@@ -8,6 +8,7 @@
 namespace FondOfSpryker\Zed\StockApi;
 
 use FondOfSpryker\Zed\StockApi\Dependency\Facade\StockApiToAvailabilityBridge;
+use FondOfSpryker\Zed\StockApi\Dependency\Facade\StockApiToProductBridge;
 use FondOfSpryker\Zed\StockApi\Dependency\QueryContainer\StockApiToApiBridge;
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
@@ -19,6 +20,8 @@ class StockApiDependencyProvider extends AbstractBundleDependencyProvider
     const QUERY_CONTAINER = 'QUERY_CONTAINER';
 
     const FACADE_STOCK = 'FACADE_STOCK';
+
+    const FACADE_PRODUCT = 'FACADE_PRODUCT';
 
     /**
      * @param \Spryker\Zed\Kernel\Container $container
@@ -32,6 +35,7 @@ class StockApiDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->provideApiQueryContainer($container);
         $container = $this->provideQueryContainer($container);
         $container = $this->provideStockFacade($container);
+        $container = $this->provideProductFacade($container);
 
         return $container;
     }
@@ -73,6 +77,20 @@ class StockApiDependencyProvider extends AbstractBundleDependencyProvider
         $container[static::FACADE_STOCK] = function (Container $container) {
             return new StockApiToAvailabilityBridge($container->getLocator()->stock()->facade());
         };
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function provideProductFacade(Container $container)
+    {
+        $container[static::FACADE_PRODUCT] = function (Container $container) {
+            return new StockApiToProductBridge($container->getLocator()->product()->facade());
+        };
+
         return $container;
     }
 }

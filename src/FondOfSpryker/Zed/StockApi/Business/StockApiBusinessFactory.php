@@ -87,4 +87,14 @@ class StockApiBusinessFactory extends AbstractBusinessFactory
     {
         return $this->getProvidedDependency(StockApiDependencyProvider::QUERY_CONTAINER);
     }
+
+    /**
+     * @return \FondOfSpryker\Zed\StockApi\Dependency\Facade\StockApiToAvailabilityInterface
+     *
+     * @throws \Spryker\Zed\Kernel\Exception\Container\ContainerKeyNotFoundException
+     */
+    protected function getProductFacade()
+    {
+        return $this->getProvidedDependency(StockApiDependencyProvider::FACADE_STOCK);
+    }
 }

@@ -10,12 +10,9 @@ namespace FondOfSpryker\Zed\StockApi\Business\Model;
 use FondOfSpryker\Zed\StockApi\Business\Mapper\EntityMapperInterface;
 use FondOfSpryker\Zed\StockApi\Business\Mapper\TransferMapperInterface;
 use FondOfSpryker\Zed\StockApi\Dependency\Facade\StockApiToAvailabilityInterface;
+use FondOfSpryker\Zed\StockApi\Dependency\Facade\StockApiToProductInterface;
 use FondOfSpryker\Zed\StockApi\Dependency\QueryContainer\StockApiToApiInterface;
-
 use Generated\Shared\Transfer\ApiDataTransfer;
-
-use Generated\Shared\Transfer\StockProductTransfer;
-use Orm\Zed\Availability\Persistence\SpyAvailability;
 use Spryker\Zed\Api\Business\Exception\EntityNotFoundException;
 use Spryker\Zed\Availability\Persistence\AvailabilityQueryContainerInterface;
 
@@ -42,6 +39,11 @@ class StockApi implements StockApiInterface
     protected $stockFacade;
 
     /**
+     * @var \FondOfSpryker\Zed\StockApi\Dependency\Facade\StockApiToProductInterface
+     */
+    protected $productFacade;
+
+    /**
      * @var \Spryker\Zed\Availability\Persistence\AvailabilityQueryContainerInterface
      */
     protected $availabilityQueryContainer;
@@ -51,6 +53,7 @@ class StockApi implements StockApiInterface
      * @param \FondOfSpryker\Zed\StockApi\Business\Mapper\EntityMapperInterface $entityMapper
      * @param \FondOfSpryker\Zed\StockApi\Business\Mapper\TransferMapperInterface $transferMapper
      * @param \FondOfSpryker\Zed\StockApi\Dependency\Facade\StockApiToAvailabilityInterface $stockFacade
+     * @param \FondOfSpryker\Zed\StockApi\Dependency\Facade\StockApiToProductInterface $productFacade
      * @param \Spryker\Zed\Availability\Persistence\AvailabilityQueryContainerInterface $availabilityQueryContainer
      */
     public function __construct(
@@ -58,12 +61,14 @@ class StockApi implements StockApiInterface
         EntityMapperInterface $entityMapper,
         TransferMapperInterface $transferMapper,
         StockApiToAvailabilityInterface $stockFacade,
+        StockApiToProductInterface $productFacade,
         AvailabilityQueryContainerInterface $availabilityQueryContainer
     ) {
         $this->apiQueryContainer = $apiQueryContainer;
         $this->entityMapper = $entityMapper;
         $this->transferMapper = $transferMapper;
         $this->stockFacade = $stockFacade;
+        $this->productFacade = $productFacade;
         $this->availabilityQueryContainer = $availabilityQueryContainer;
     }
 
@@ -77,47 +82,53 @@ class StockApi implements StockApiInterface
      */
     public function update($sku, ApiDataTransfer $apiDataTransfer)
     {
-        $availability = $this->getAvailability($sku);
+        $idProductConcrete = $this->productFacade->findProductConcreteIdBySku($sku);
 
-        if (!$availability) {
-            throw new EntityNotFoundException(sprintf('Availability not found for sku %s', $sku));
+        if ($idProductConcrete === null) {
+            throw new EntityNotFoundException(sprintf('Concrete product not found for sku %s', $sku));
         }
 
-        $stockProductTransfer = $this->createStockProductTransfer($sku, $apiDataTransfer, $availability);
+        $stockProductTransferList = $this->stockFacade->getStockProductsByIdProduct($idProductConcrete);
+
+        if (count($stockProductTransferList) === 0) {
+            throw new EntityNotFoundException(sprintf('There is no product stock for sku %s', $sku));
+        }
+
+        $stockProductTransfer = $this->createStockProductTransfer($stockProductTransferList, $apiDataTransfer);
+
+        if ($stockProductTransfer === null) {
+            throw new EntityNotFoundException(sprintf('There is no product stock for sku %s and given warehouse', $sku));
+        }
+
         $stockProductTransfer = $this->stockFacade->updateStockProduct($stockProductTransfer);
 
         return $this->apiQueryContainer->createApiItem($stockProductTransfer, $sku);
     }
 
     /**
-     * @param string $sku
+     * @param \Generated\Shared\Transfer\StockProductTransfer[] $stockProductTransferList
      * @param \Generated\Shared\Transfer\ApiDataTransfer $apiDataTransfer
-     * @param \Orm\Zed\Availability\Persistence\SpyAvailability $availability
      *
      * @return \Generated\Shared\Transfer\StockProductTransfer
      */
-    private function createStockProductTransfer(string $sku, ApiDataTransfer $apiDataTransfer, SpyAvailability $availability)
+    protected function createStockProductTransfer(array $stockProductTransferList, ApiDataTransfer $apiDataTransfer)
     {
         $data = (array)$apiDataTransfer->getData();
+        $preparedStockProductTransfer = null;
 
-        $stockProductTransfer = new StockProductTransfer();
-        $stockProductTransfer->fromArray($data, true);
-        $stockProductTransfer->setSku($sku);
-        $stockProductTransfer->setIdStockProduct($availability->getIdAvailability());
 
-        return $stockProductTransfer;
+        foreach ($stockProductTransferList as $stockProductTransfer) {
+            if ($stockProductTransfer->getStockType() !== $data['stock_type']) {
+                continue;
+            }
+
+            $stockProductTransfer->setIsNeverOutOfStock($data['is_never_out_of_stock']);
+            $stockProductTransfer->setQuantity($data['quantity']);
+
+            return $stockProductTransfer;
+        }
+
+        return null;
     }
 
-    /**
-     * @param string $sku
-     *
-     * @return mixed
-     */
-    public function getAvailability(string $sku)
-    {
-        $spyAvailabilityQuery = $this->availabilityQueryContainer->querySpyAvailabilityBySku($sku);
-        $availability = $spyAvailabilityQuery->findOneOrCreate();
-
-        return $availability;
-    }
 }
