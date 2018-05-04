@@ -30,6 +30,7 @@ class StockApiBusinessFactory extends AbstractBusinessFactory
             $this->createEntityMapper(),
             $this->createTransferMapper(),
             $this->getStockFacade(),
+            $this->getProductFacade(),
             $this->getQueryContainer()
         );
     }
@@ -95,6 +96,6 @@ class StockApiBusinessFactory extends AbstractBusinessFactory
      */
     protected function getProductFacade()
     {
-        return $this->getProvidedDependency(StockApiDependencyProvider::FACADE_STOCK);
+        return $this->getProvidedDependency(StockApiDependencyProvider::FACADE_PRODUCT);
     }
 }
