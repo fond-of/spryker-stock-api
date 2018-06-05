@@ -3,6 +3,7 @@
 namespace FondOfSpryker\Zed\StockApi\Business\Model;
 
 use Codeception\Test\Unit;
+use FondOfSpryker\Zed\StockApi\Dependency\Facade\StockApiToProductInterface;
 
 class StockApiTest extends Unit
 {
@@ -37,7 +38,7 @@ class StockApiTest extends Unit
     protected $spyAvailabilityQueryMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var \Spryker\Zed\Availability\Persistence\AvailabilityQueryContainerInterface|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $availabilityQueryContainerMock;
 
@@ -45,6 +46,11 @@ class StockApiTest extends Unit
      * @var \PHPUnit\Framework\MockObject\MockObject
      */
     protected $apiDataTransferMock;
+
+    /**
+     * @var \FondOfSpryker\Zed\StockApi\Dependency\Facade\StockApiToProductInterface |\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $stockApiToProductMock;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject
@@ -85,6 +91,7 @@ class StockApiTest extends Unit
 
         $this->stockFacadeMock = $this->getMockBuilder('\FondOfSpryker\Zed\StockApi\Dependency\Facade\StockApiToAvailabilityInterface')
             ->disableOriginalConstructor()
+            ->setMethods(['getStockProductsByIdProduct'])
             ->getMockForAbstractClass();
 
         $this->spyAvailabilityMock = $this->getMockBuilder("\Orm\Zed\Availability\Persistence\SpyAvailability")
@@ -97,10 +104,10 @@ class StockApiTest extends Unit
             ->setMethods(['findOneOrCreate'])
             ->getMock();
 
-        $this->availabilityQueryContainerMock = $this->getMockBuilder('\Spryker\Zed\Availability\Persistence\AvailabilityQueryContainerInterface')
+        $this->availabilityQueryContainerMock = $this->getMockBuilder("\Spryker\Zed\Availability\Persistence\AvailabilityQueryContainerInterface")
             ->disableOriginalConstructor()
             ->setMethods(['querySpyAvailabilityBySku'])
-            ->getMockForAbstractClass();
+            ->getMock();
 
         $this->apiDataTransferMock = $this->getMockBuilder('\Generated\Shared\Transfer\ApiDataTransfer')
             ->disableOriginalConstructor()
@@ -111,11 +118,21 @@ class StockApiTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->stockApiToProductMock = $this->getMockBuilder(StockApiToProductInterface::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['findProductConcreteIdBySku'])
+            ->getMock();
+
+        $this->stockProductTransferMock = $this->getMockBuilder('Generated\Shared\Transfer\StockProductTransfer')
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->stockApi = new StockApi(
             $this->apiQueryContainer,
             $this->entityMapperMock,
             $this->transferMapperMock,
             $this->stockFacadeMock,
+            $this->stockApiToProductMock,
             $this->availabilityQueryContainerMock
         );
     }
@@ -125,21 +142,6 @@ class StockApiTest extends Unit
      */
     public function testUpdateStockOfProduct()
     {
-        $this->spyAvailabilityQueryMock
-            ->expects($this->atLeastOnce())
-            ->method("findOneOrCreate")
-            ->willReturn($this->spyAvailabilityMock);
-
-        $this->availabilityQueryContainerMock
-            ->expects($this->atLeastOnce())
-            ->method('querySpyAvailabilityBySku')
-            ->willReturn($this->spyAvailabilityQueryMock);
-
-        $this->spyAvailabilityMock
-            ->expects($this->atLeastOnce())
-            ->method('getIdAvailability')
-            ->willReturn(10);
-
         $this->apiDataTransferMock
             ->expects($this->atLeastOnce())
             ->method('getData')
@@ -150,12 +152,29 @@ class StockApiTest extends Unit
             ->method("updateStockProduct")
             ->willReturn(10);
 
+        $this->stockProductTransferMock->expects($this->any())
+            ->method("getStockType")
+            ->willReturn("Warehouse1");
+
+        $this->stockFacadeMock
+            ->expects($this->atLeastOnce())
+            ->method("getStockProductsByIdProduct")
+            ->willReturn(
+                [
+                    "0" => $this->stockProductTransferMock,
+                ]
+            );
+
         $this->apiQueryContainer
             ->expects($this->atLeastOnce())
             ->method('createApiItem')
             ->willReturn($this->apiItemTransferMock);
 
-        $sku = "TST-123-456-789";
+        $this->stockApiToProductMock->expects($this->atLeastOnce())
+            ->method('findProductConcreteIdBySku')
+            ->willReturn(10);
+
+        $sku = "SKU";
         $apiDataTransfer = $this->stockApi->update($sku, $this->apiDataTransferMock);
 
         $this->assertNotNull($apiDataTransfer);
