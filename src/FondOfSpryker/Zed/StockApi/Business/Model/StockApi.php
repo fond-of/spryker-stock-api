@@ -116,7 +116,6 @@ class StockApi implements StockApiInterface
         $data = (array)$apiDataTransfer->getData();
         $preparedStockProductTransfer = null;
 
-
         foreach ($stockProductTransferList as $stockProductTransfer) {
             if ($stockProductTransfer->getStockType() !== $data['stock_type']) {
                 continue;
@@ -130,5 +129,4 @@ class StockApi implements StockApiInterface
 
         return null;
     }
-
 }

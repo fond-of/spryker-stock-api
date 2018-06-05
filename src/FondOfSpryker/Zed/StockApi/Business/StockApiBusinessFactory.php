@@ -7,12 +7,12 @@
 
 namespace FondOfSpryker\Zed\StockApi\Business;
 
-use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 use FondOfSpryker\Zed\StockApi\Business\Mapper\EntityMapper;
 use FondOfSpryker\Zed\StockApi\Business\Mapper\TransferMapper;
 use FondOfSpryker\Zed\StockApi\Business\Model\StockApi;
 use FondOfSpryker\Zed\StockApi\Business\Model\Validator\StockApiValidator;
 use FondOfSpryker\Zed\StockApi\StockApiDependencyProvider;
+use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 
 /**
  * @method \FondOfSpryker\Zed\StockApi\StockApiConfig getConfig()
@@ -21,7 +21,6 @@ class StockApiBusinessFactory extends AbstractBusinessFactory
 {
     /**
      * @return \FondOfSpryker\Zed\StockApi\Business\Model\StockApiInterface
-     * @throws \Spryker\Zed\Kernel\Exception\Container\ContainerKeyNotFoundException
      */
     public function createStockApi()
     {
@@ -61,8 +60,6 @@ class StockApiBusinessFactory extends AbstractBusinessFactory
 
     /**
      * @return \FondOfSpryker\Zed\StockApi\Dependency\QueryContainer\StockApiToApiInterface
-     *
-     * @throws \Spryker\Zed\Kernel\Exception\Container\ContainerKeyNotFoundException
      */
     protected function getApiQueryContainer()
     {
@@ -71,8 +68,6 @@ class StockApiBusinessFactory extends AbstractBusinessFactory
 
     /**
      * @return \FondOfSpryker\Zed\StockApi\Dependency\Facade\StockApiToAvailabilityInterface
-     *
-     * @throws \Spryker\Zed\Kernel\Exception\Container\ContainerKeyNotFoundException
      */
     protected function getStockFacade()
     {
@@ -81,8 +76,6 @@ class StockApiBusinessFactory extends AbstractBusinessFactory
 
     /**
      * @return \Spryker\Zed\Availability\Persistence\AvailabilityQueryContainerInterface
-     *
-     * @throws \Spryker\Zed\Kernel\Exception\Container\ContainerKeyNotFoundException
      */
     protected function getQueryContainer()
     {
@@ -91,8 +84,6 @@ class StockApiBusinessFactory extends AbstractBusinessFactory
 
     /**
      * @return \FondOfSpryker\Zed\StockApi\Dependency\Facade\StockApiToAvailabilityInterface
-     *
-     * @throws \Spryker\Zed\Kernel\Exception\Container\ContainerKeyNotFoundException
      */
     protected function getProductFacade()
     {

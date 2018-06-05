@@ -7,13 +7,13 @@
 
 namespace FondOfSpryker\Zed\StockApi\Communication\Plugin\Api;
 
+use FondOfSpryker\Zed\StockApi\StockApiConfig;
 use Generated\Shared\Transfer\ApiDataTransfer;
 use Generated\Shared\Transfer\ApiRequestTransfer;
 use RuntimeException;
 use Spryker\Zed\Api\ApiConfig;
 use Spryker\Zed\Api\Dependency\Plugin\ApiResourcePluginInterface;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
-use FondOfSpryker\Zed\StockApi\StockApiConfig;
 
 /**
  * @method \FondOfSpryker\Zed\StockApi\Business\StockApiFacadeInterface getFacade()
@@ -23,6 +23,8 @@ class StockApiResourcePlugin extends AbstractPlugin implements ApiResourcePlugin
 {
     /**
      * @param int $id
+     *
+     * @throws \RuntimeException
      *
      * @return void
      */
@@ -45,6 +47,8 @@ class StockApiResourcePlugin extends AbstractPlugin implements ApiResourcePlugin
     /**
      * @param \Generated\Shared\Transfer\ApiDataTransfer $apiDataTransfer
      *
+     * @throws \RuntimeException
+     *
      * @return void
      */
     public function add(ApiDataTransfer $apiDataTransfer)
@@ -55,6 +59,8 @@ class StockApiResourcePlugin extends AbstractPlugin implements ApiResourcePlugin
     /**
      * @param int $idStock
      *
+     * @throws \RuntimeException
+     *
      * @return void
      */
     public function remove($idStock)
@@ -64,6 +70,8 @@ class StockApiResourcePlugin extends AbstractPlugin implements ApiResourcePlugin
 
     /**
      * @param \Generated\Shared\Transfer\ApiRequestTransfer $apiRequestTransfer
+     *
+     * @throws \RuntimeException
      *
      * @return void
      */

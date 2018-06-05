@@ -14,7 +14,7 @@ class EntityMapper implements EntityMapperInterface
     /**
      * @param array $data
      *
-     * @return SpyStock
+     * @return \Orm\Zed\Stock\Persistence\SpyStock
      */
     public function toEntity(array $data)
     {
