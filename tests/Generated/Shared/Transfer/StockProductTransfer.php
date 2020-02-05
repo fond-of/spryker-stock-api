@@ -1,26 +1,22 @@
 <?php
 
-/**
- * (c) Spryker Systems GmbH copyright protected
- */
-
 namespace Generated\Shared\Transfer;
 
 use Spryker\Shared\Kernel\Transfer\AbstractTransfer;
 
 class StockProductTransfer extends AbstractTransfer
 {
-    const SKU = 'sku';
+    public const SKU = 'sku';
 
-    const STOCK_TYPE = 'stockType';
+    public const STOCK_TYPE = 'stockType';
 
-    const FK_STOCK = 'fkStock';
+    public const FK_STOCK = 'fkStock';
 
-    const QUANTITY = 'quantity';
+    public const QUANTITY = 'quantity';
 
-    const IS_NEVER_OUT_OF_STOCK = 'isNeverOutOfStock';
+    public const IS_NEVER_OUT_OF_STOCK = 'isNeverOutOfStock';
 
-    const ID_STOCK_PRODUCT = 'idStockProduct';
+    public const ID_STOCK_PRODUCT = 'idStockProduct';
 
     /**
      * @var string

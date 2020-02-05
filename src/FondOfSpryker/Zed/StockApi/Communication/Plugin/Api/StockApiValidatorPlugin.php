@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Copyright © 2016-present Spryker Systems GmbH. All rights reserved.
- * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
- */
-
 namespace FondOfSpryker\Zed\StockApi\Communication\Plugin\Api;
 
 use FondOfSpryker\Zed\StockApi\StockApiConfig;
@@ -15,6 +10,7 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 /**
  * @method \FondOfSpryker\Zed\StockApi\Business\StockApiFacadeInterface getFacade()
  * @method \FondOfSpryker\Zed\StockApi\Business\StockApiBusinessFactory getFactory()
+ * @method \FondOfSpryker\Zed\StockApi\StockApiConfig getConfig()
  */
 class StockApiValidatorPlugin extends AbstractPlugin implements ApiValidatorPluginInterface
 {

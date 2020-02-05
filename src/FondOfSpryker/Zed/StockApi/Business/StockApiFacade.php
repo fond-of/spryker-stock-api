@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Copyright © 2016-present Spryker Systems GmbH. All rights reserved.
- * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
- */
-
 namespace FondOfSpryker\Zed\StockApi\Business;
 
 use Generated\Shared\Transfer\ApiDataTransfer;
@@ -16,12 +11,11 @@ use Spryker\Zed\Kernel\Business\AbstractFacade;
 class StockApiFacade extends AbstractFacade implements StockApiFacadeInterface
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @api
      *
      * @param int $idStock
-     *
      * @param \Generated\Shared\Transfer\ApiDataTransfer $apiDataTransfer
      *
      * @return \Generated\Shared\Transfer\ApiItemTransfer
@@ -34,7 +28,7 @@ class StockApiFacade extends AbstractFacade implements StockApiFacadeInterface
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @api
      *

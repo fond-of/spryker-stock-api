@@ -1,10 +1,5 @@
 <?php
 
-/**
- * Copyright © 2016-present Spryker Systems GmbH. All rights reserved.
- * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
- */
-
 namespace FondOfSpryker\Zed\StockApi;
 
 use FondOfSpryker\Zed\StockApi\Dependency\Facade\StockApiToAvailabilityBridge;
@@ -15,13 +10,13 @@ use Spryker\Zed\Kernel\Container;
 
 class StockApiDependencyProvider extends AbstractBundleDependencyProvider
 {
-    const QUERY_CONTAINER_API = 'QUERY_CONTAINER_API';
+    public const QUERY_CONTAINER_API = 'QUERY_CONTAINER_API';
 
-    const QUERY_CONTAINER = 'QUERY_CONTAINER';
+    public const QUERY_CONTAINER = 'QUERY_CONTAINER';
 
-    const FACADE_STOCK = 'FACADE_STOCK';
+    public const FACADE_STOCK = 'FACADE_STOCK';
 
-    const FACADE_PRODUCT = 'FACADE_PRODUCT';
+    public const FACADE_PRODUCT = 'FACADE_PRODUCT';
 
     /**
      * @param \Spryker\Zed\Kernel\Container $container
@@ -64,6 +59,7 @@ class StockApiDependencyProvider extends AbstractBundleDependencyProvider
         $container[static::QUERY_CONTAINER] = function (Container $container) {
             return $container->getLocator()->availability()->queryContainer();
         };
+
         return $container;
     }
 
@@ -77,6 +73,7 @@ class StockApiDependencyProvider extends AbstractBundleDependencyProvider
         $container[static::FACADE_STOCK] = function (Container $container) {
             return new StockApiToAvailabilityBridge($container->getLocator()->stock()->facade());
         };
+
         return $container;
     }
 
